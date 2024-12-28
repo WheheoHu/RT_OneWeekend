@@ -5,7 +5,6 @@
 #ifndef RT_ONEWEEKEND_RAY_H
 #define RT_ONEWEEKEND_RAY_H
 
-#include <glm/glm.hpp>
 #include "RT_Weekend.h"
 
 class Ray {
