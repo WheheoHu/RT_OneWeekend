@@ -33,7 +33,7 @@ inline uint32_t rcg_hash(uint32_t input) {
 //return a random number in [0, 1) using rcg hash
 inline double random_rcg(uint32_t &seed) {
     seed = rcg_hash(seed);
-    return (float) seed / (float) std::numeric_limits<uint32_t>::max();
+    return static_cast<float>(seed) / static_cast<float>(std::numeric_limits<uint32_t>::max());
 }
 
 //return a random number with min and max using random_rcg

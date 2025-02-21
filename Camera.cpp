@@ -4,7 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <thread>
-#include <omp.h>
+// #include <omp.h>
 #include <spdlog/spdlog.h>
 #include "Camera.h"
 #include "Image_Render.h"
@@ -129,7 +129,7 @@ vec3_color Camera::ray_color(const Ray &ray, const Hittable &world, uint32_t dep
         Ray scattered;
         vec3_color attenuation;
         auto mat = record.mat_ptr;
-        spdlog::debug("Meterial:{}", mat->get_name());
+        spdlog::debug("Material:{}", mat->get_name());
         if (mat->scatter(ray, record, attenuation, scattered)) {
             return attenuation.cwiseProduct(ray_color(scattered, world, depth - 1));
         }

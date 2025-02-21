@@ -27,7 +27,7 @@ int main() {
                                                      j - CUBE_SIZE / 1.0f);
 
                 auto sphere_color = vec3_color(0.5f, 0.5f, 0.5f);
-                auto sphere_material = std::make_shared<Metal>(sphere_color, 0.0f);
+                auto sphere_material = std::make_shared<Lambertian>(sphere_color);
                 world.add(std::make_shared<Sphere>(
                     sphere_position, sphere_radius, sphere_material));
                 spdlog::debug("Added sphere at position: {} {} {},with radius {:.3f}", sphere_position.x(),
@@ -49,13 +49,13 @@ int main() {
     // Image Settings
     const uint32_t IMAGE_WIDTH = 1280;
     const uint32_t IMAGE_HEIGHT = 720;
-    const uint32_t SPP = 2;
-    const uint32_t MAX_DEPTH = 100;
-    const uint32_t H_FOV = 55;
+    const uint32_t SPP = 1;
+    const uint32_t MAX_DEPTH = 30;
+    const uint32_t H_FOV = 45;
 
     //Camera Settings
 
-    const vec3_position CAMERA_POSITION = vec3_position(0.f, 10.f, 10.f);
+    const vec3_position CAMERA_POSITION = vec3_position(0.f, 5.f, 5.f);
     const vec3_direction CAMERA_DIRECTION = vec3_direction(0.f, -1.5f, -2.0f);
     constexpr float DEFOCUS_ANGLE = 0;
     constexpr float FOCUS_DISTANCE = 14.1421356237;
