@@ -44,7 +44,7 @@ bool Lambertian::scatter(const Ray &r_in, const Hit_Record &rec, vec3_value &att
     auto scatter_direction = rec.normal + diffuse_direction;
 
     attenuation = albedo;
-    scattered = Ray(rec.p, scatter_direction,r_in.getTime());
+    scattered = Ray(rec.position, scatter_direction,r_in.getTime());
 
     return true;
 }
@@ -57,7 +57,7 @@ bool Metal::scatter(const Ray &r_in, const Hit_Record &rec, vec3_value &attenuat
     auto reflect_direction = reflect(r_in.getDir().normalized(), rec.normal);
     auto reflect_fuzzed = reflect_direction + static_cast<float>(fuzz) * diffuse_random_direction(
             (uint32_t) ((r_in.getDir() + r_in.getOrig()).norm() * (float) 1000000000));
-    scattered = Ray(rec.p, reflect_fuzzed,r_in.getTime());
+    scattered = Ray(rec.position, reflect_fuzzed,r_in.getTime());
     attenuation = albedo;
     return scattered.getDir().dot(rec.normal) > 0;
 }
@@ -83,7 +83,7 @@ bool Dielectric::scatter(const Ray &r_in, const Hit_Record &rec, vec3_value &att
             refrection_direction=refrect(r_in_normal,rec.normal,ref_idx,1.0);
         }
     }
-    scattered=Ray(rec.p,refrection_direction,r_in.getTime());
+    scattered=Ray(rec.position,refrection_direction,r_in.getTime());
     return true;
 }
 

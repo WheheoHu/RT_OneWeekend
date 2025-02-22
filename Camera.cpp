@@ -45,8 +45,8 @@ void Camera::render(const Hittable &world, const bool multithreading) {
         }
 #else
         const uint32_t n_tread = std::thread::hardware_concurrency();
-
-        std::cout << "hardware_concurrency: " << n_tread << std::endl;
+        spdlog::debug("hardware_concurrency: {}", n_tread);
+        // std::cout << "hardware_concurrency: " << n_tread << std::endl;
         std::vector<std::thread> thread_vector;
         thread_vector.reserve(n_tread);
         for (uint32_t i = 0; i < n_tread; ++i) {
@@ -63,6 +63,7 @@ void Camera::render(const Hittable &world, const bool multithreading) {
                                         ray_color(get_ray(u, v, seed), world, max_depth) / static_cast<float>(SPP);
                             }
                             pixel_color = linear2gamma(pixel_color, 2.2f);
+                            //convert color value from 0~1 to 0~255
                             vec3_value temp_vec = pixel_color * 255.0f;
                             framebuffer[h * image_width + w] = temp_vec;
                         }
@@ -125,11 +126,12 @@ vec3_color Camera::ray_color(const Ray &ray, const Hittable &world, uint32_t dep
     }
     Hit_Record record{};
 
-    if (world.hit(ray, Interval(0.01, +infinity), record)) {
+    if (world.hit(ray, Interval(0.001, +infinity), record)) {
         Ray scattered;
         vec3_color attenuation;
         auto mat = record.mat_ptr;
-        spdlog::debug("Material:{}", mat->get_name());
+        record.position += record.normal * 0.001f;
+        // spdlog::debug("Material:{}", mat->get_name());
         if (mat->scatter(ray, record, attenuation, scattered)) {
             return attenuation.cwiseProduct(ray_color(scattered, world, depth - 1));
         }
@@ -139,7 +141,8 @@ vec3_color Camera::ray_color(const Ray &ray, const Hittable &world, uint32_t dep
     //background vec3_color
     vec3_direction ray_dir = ray.getDir().normalized();
     auto t = 0.5f * (ray_dir.y() + 1.0f);
-    return (1.0f - t) * gamma2linear(vec3_color(1.0f, 1.0f, 1.0f),2.2f) + t * gamma2linear(vec3_color(0.5f, 0.7f, 1.0f), 2.2f);
+    return (1.0f - t) * gamma2linear(vec3_color(1.0f, 1.0f, 1.0f), 2.2f) + t * gamma2linear(
+               vec3_color(0.5f, 0.7f, 1.0f), 2.2f);
 }
 
 Camera::Camera(uint32_t imageWidth, uint32_t imageHeight, uint32_t spp, uint32_t maxDepth, uint32_t h_FOV,

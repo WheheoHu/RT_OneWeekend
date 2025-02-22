@@ -6,7 +6,7 @@
 #include "Interval.h"
 bool Sphere::hit(const Ray &r, Interval ray_t, Hit_Record &record) const {
 
-    auto current_center=is_moving?get_center(r.getTime()):center;
+    auto current_center=get_center(r.getTime());
 
     auto oc = r.getOrig() - current_center;
     auto a = r.getDir().dot(r.getDir());
@@ -27,11 +27,11 @@ bool Sphere::hit(const Ray &r, Interval ray_t, Hit_Record &record) const {
         }
     }
 
-    record.t = root;
-    record.p = r.at(static_cast<float>(record.t));
+    record.time = root;
+    record.position = r.at(static_cast<float>(record.time));
 
 
-    vec3_direction outward_normal = (record.p - current_center) / static_cast<float>(radius);
+    vec3_direction outward_normal = (record.position - current_center) / static_cast<float>(radius);
     outward_normal.normalize();
     record.set_face_normal(r, outward_normal);
     //record.p+=EPSILON*outward_normal.normalized();

@@ -19,7 +19,7 @@ bool Hittable_List::hit(const Ray &r, Interval ray_t, Hit_Record &record) const 
     for (const auto& obj: objects) {
         if (obj->hit(r, Interval(ray_t.min,closest_so_far), temp_rec)){
             hit_anything= true;
-            closest_so_far=temp_rec.t;
+            closest_so_far=temp_rec.time;
             record=temp_rec;
         }
     }
