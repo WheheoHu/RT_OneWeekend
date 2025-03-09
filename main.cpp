@@ -9,6 +9,7 @@
 #include "Timer.h"
 
 int main() {
+//TODO Fix rendering issues when camera pull far from origin
     spdlog::set_level(spdlog::level::debug);
 
     //World object
@@ -27,7 +28,7 @@ int main() {
                                                      j - CUBE_SIZE / 1.0f);
                 cube_center += sphere_position;
                 auto sphere_color = vec3_color(0.5f, 0.5f, 0.5f);
-                auto sphere_material = std::make_shared<Metal>(sphere_color, 0.0f);
+                auto sphere_material = std::make_shared<Lambertian>(sphere_color);
                 world.add(std::make_shared<Sphere>(
                     sphere_position, sphere_radius, sphere_material));
                 spdlog::debug("Added sphere at position: {} {} {},with radius {:.3f}", sphere_position.x(),
@@ -51,12 +52,12 @@ int main() {
     const uint32_t IMAGE_WIDTH = 1280;
     const uint32_t IMAGE_HEIGHT = 720;
     const uint32_t SPP = 30;
-    const uint32_t MAX_DEPTH = 12;
+    const uint32_t MAX_DEPTH = 15;
     const uint32_t H_FOV = 45;
 
     //Camera Settings
 
-    const vec3_position CAMERA_POSITION = vec3_position(0.0, 2.0, 4.0);
+    const vec3_position CAMERA_POSITION = vec3_position(0.0, 3.0, 6.0);
     // const vec3_direction CAMERA_DIRECTION = vec3_direction(0.f, -0.5f, -2.5f);
     const vec3_direction CAMERA_DIRECTION = (cube_center - CAMERA_POSITION).normalized();
     spdlog::debug("Camera direction: {} {} {}", CAMERA_DIRECTION.x(), CAMERA_DIRECTION.y(), CAMERA_DIRECTION.z());

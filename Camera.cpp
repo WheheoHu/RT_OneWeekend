@@ -212,7 +212,7 @@ Ray Camera::get_ray(float w, float h, uint32_t seed) {
     ray_origin = camera_center;
 #endif
     vec3_direction ray_direction = pixel_center - ray_origin;
-//TODO  what is this?
+
     auto ray_time = random_double(0.0f, 1.0f, seed);
     return Ray(ray_origin, ray_direction.normalized(), ray_time);
 }

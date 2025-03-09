@@ -24,7 +24,7 @@ const vec3_direction & Ray::getDir() const {
     return dir;
 }
 
-vec3_position Ray::at(float t) const {
+vec3_position Ray::at(double t) const {
     return orig + t * dir;
 }
 

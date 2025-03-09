@@ -28,10 +28,10 @@ bool Sphere::hit(const Ray &r, Interval ray_t, Hit_Record &record) const {
     }
 
     record.time = root;
-    record.position = r.at(static_cast<float>(record.time));
+    record.position = r.at(record.time);
 
 
-    vec3_direction outward_normal = (record.position - current_center) / static_cast<float>(radius);
+    vec3_direction outward_normal = (record.position - current_center) / radius;
     outward_normal.normalize();
     record.set_face_normal(r, outward_normal);
     //record.p+=EPSILON*outward_normal.normalized();

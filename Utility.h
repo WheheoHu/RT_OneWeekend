@@ -9,7 +9,6 @@
 #include <memory>
 #include <random>
 
-//TODO Replace glm with eigen
 #include <Eigen/Dense>
 
 

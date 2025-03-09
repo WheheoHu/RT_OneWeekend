@@ -19,7 +19,7 @@ public:
 
     [[nodiscard]] const vec3_direction & getDir() const;
 
-    [[nodiscard]] vec3_position at(float t) const;
+    [[nodiscard]] vec3_position at(double t) const;
 
 
 private:
