@@ -5,7 +5,7 @@
 #ifndef RT_ONEWEEKEND_CAMERA_H
 #define RT_ONEWEEKEND_CAMERA_H
 
-#include "RT_Weekend.h"
+#include "Utility.h"
 
 #include "Hittable_List.h"
 
@@ -37,7 +37,7 @@ private:
     float focus_distance=10;
 
     vec3_direction camera_u,camera_v,camera_w;//Camera frame basis vectors,camera_u pointing to camera right,camera_v pointing to camera up,camera_w pointing **opposite** the view direction
-    vec3_direction vup=vec3_direction (0.0f,1.0f,0.0f); //vector for camera up
+    vec3_direction vector_up; //vector for camera up
     vec3_direction defocus_disk_u;
     vec3_direction defocus_disk_v;
 

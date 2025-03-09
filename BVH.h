@@ -5,7 +5,7 @@
 #ifndef RT_ONEWEEKEND_BVH_H
 #define RT_ONEWEEKEND_BVH_H
 #include "Interval.h"
-#include "RT_Weekend.h"
+#include "Utility.h"
 
 
 class BVH {

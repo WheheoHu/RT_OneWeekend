@@ -54,7 +54,7 @@ void Camera::render(const Hittable &world, const bool multithreading) {
                 [&, i]() {
                     for (uint32_t h = i; h < image_height; h += n_tread) {
                         for (int w = 0; w < image_width; ++w) {
-                            uint32_t seed = w * h * image_width;
+                            uint32_t seed = h * image_width + w ;
                             vec3_color pixel_color(0.f, 0.f, 0.f);
                             for (int sample_index = 0; sample_index < SPP; ++sample_index) {
                                 auto u = (w + random_double(-0.5f, 0.5f, seed));
@@ -80,7 +80,7 @@ void Camera::render(const Hittable &world, const bool multithreading) {
             std::cerr << "\rOutput: " << static_cast<uint32_t>(100.0 * static_cast<float>(h) / image_height) << '%' <<
                     std::flush;
             for (int w = 0; w < image_width; ++w) {
-                uint32_t seed = w * h * image_width;
+                uint32_t seed = h + w * image_width;
 
                 vec3_color pixel_color(0.f, 0.f, 0.f);
                 for (int i = 0; i < SPP; ++i) {
@@ -124,11 +124,11 @@ vec3_color Camera::ray_color(const Ray &ray, const Hittable &world, uint32_t dep
     if (depth <= 0) {
         return {0.0f, 0.0f, 0.0f};
     }
-    Hit_Record record{};
+    Hit_Record record;
 
     if (world.hit(ray, Interval(0.001, +infinity), record)) {
         Ray scattered;
-        vec3_color attenuation;
+        vec3_value attenuation;
         auto mat = record.mat_ptr;
         record.position += record.normal * 0.001f;
         // spdlog::debug("Material:{}", mat->get_name());
@@ -164,14 +164,15 @@ Camera::Camera(uint32_t imageWidth, uint32_t imageHeight, uint32_t spp, uint32_t
 
     //setting up viewport
     camera_direction.normalize();
-    vup.normalize();
+    vector_up=vec3_direction (0.0f,1.0f,0.0f);
+    vector_up.normalize();
 
     auto viewport_width = 2 * focus_distance * tan(fov_radians / 2.0f);
     auto viewport_height = viewport_width / image_aspect_ratio;
 
 
     camera_w = camera_direction;
-    camera_u = camera_direction.cross(vup).normalized();
+    camera_u = camera_direction.cross(vector_up).normalized();
     camera_v = camera_u.cross(camera_w).normalized();
 
 
@@ -211,6 +212,7 @@ Ray Camera::get_ray(float w, float h, uint32_t seed) {
     ray_origin = camera_center;
 #endif
     vec3_direction ray_direction = pixel_center - ray_origin;
+//TODO  what is this?
     auto ray_time = random_double(0.0f, 1.0f, seed);
     return Ray(ray_origin, ray_direction.normalized(), ray_time);
 }

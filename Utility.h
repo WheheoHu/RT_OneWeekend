@@ -14,10 +14,10 @@
 
 
 
-typedef Eigen::Vector3f vec3_color,vec3_direction,vec3_position,vec3_value;
+typedef Eigen::Vector3d vec3_color,vec3_direction,vec3_position,vec3_value;
 //const double infinity = std::numeric_limits<double>::infinity();
 const double PI = 3.1415926535897932385;
-const float EPSILON = 1e-4;
+const double EPSILON = 1e-4;
 
 inline double degrees_to_radians(double degrees) {
     return degrees * PI / 180.0;
@@ -57,7 +57,9 @@ inline double random_double(){
     return dis(gen);
 }
 
-
+inline double random_double_slow(double min, double max) {
+    return min + (max - min) * random_double();
+}
 
 inline vec3_color linear2gamma(vec3_color color, float gamma) {
     return {pow(color.x(), 1.0f/gamma), pow(color.y(), 1.0f/gamma), pow(color.z(), 1.0f/gamma)};

@@ -5,7 +5,7 @@
 #ifndef RT_ONEWEEKEND_MATERIAL_H
 #define RT_ONEWEEKEND_MATERIAL_H
 
-#include "RT_Weekend.h"
+#include "Utility.h"
 
 
 class Hit_Record;

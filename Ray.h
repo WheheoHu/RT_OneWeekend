@@ -5,7 +5,7 @@
 #ifndef RT_ONEWEEKEND_RAY_H
 #define RT_ONEWEEKEND_RAY_H
 
-#include "RT_Weekend.h"
+#include "Utility.h"
 
 class Ray {
 public:

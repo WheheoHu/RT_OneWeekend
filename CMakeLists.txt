@@ -15,7 +15,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0")
 find_package(Eigen3 REQUIRED)
 find_package(spdlog REQUIRED)
 
-add_executable(RT_OneWeekend main.cpp Ray.cpp Ray.h Hittable.h Sphere.cpp Sphere.h Hittable_List.cpp Hittable_List.h RT_Weekend.h Camera.cpp
+add_executable(RT_OneWeekend main.cpp Ray.cpp Ray.h Hittable.h Sphere.cpp Sphere.h Hittable_List.cpp Hittable_List.h Utility.h Camera.cpp
         Interval.cpp
         Interval.h
         Camera.cpp

@@ -6,7 +6,7 @@
 #define RT_ONEWEEKEND_IMAGE_RENDER_H
 
 #include <vector>
-#include "RT_Weekend.h"
+#include "Utility.h"
 
 class Image_Render {
 public:
