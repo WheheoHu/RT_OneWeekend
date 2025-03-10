@@ -13,7 +13,7 @@
 class Camera {
 public:
     Camera(uint32_t imageWidth, uint32_t imageHeight, uint32_t spp, uint32_t maxDepth, uint32_t h_FOV,
-           vec3_position cameraPosition, vec3_direction cameraDirection, float defocusAngle, float focusDistance);
+           vec3_position cameraPosition, vec3_direction cameraDirection, double defocusAngle, double focusDistance);
 
     void render(const Hittable &world, bool multithreading);
 
@@ -33,15 +33,15 @@ private:
     vec3_direction camera_direction;
 
 
-    float defocus_angle=0;
-    float focus_distance=10;
+    double defocus_angle;
+    double focus_distance;
 
     vec3_direction camera_u,camera_v,camera_w;//Camera frame basis vectors,camera_u pointing to camera right,camera_v pointing to camera up,camera_w pointing **opposite** the view direction
     vec3_direction vector_up; //vector for camera up
     vec3_direction defocus_disk_u;
     vec3_direction defocus_disk_v;
 
-    float image_aspect_ratio;
+    double image_aspect_ratio;
 
 
 

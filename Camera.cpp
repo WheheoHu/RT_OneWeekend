@@ -146,7 +146,7 @@ vec3_color Camera::ray_color(const Ray &ray, const Hittable &world, uint32_t dep
 }
 
 Camera::Camera(uint32_t imageWidth, uint32_t imageHeight, uint32_t spp, uint32_t maxDepth, uint32_t h_FOV,
-               vec3_position cameraPosition, vec3_direction cameraDirection, float defocusAngle, float focusDistance)
+               vec3_position cameraPosition, vec3_direction cameraDirection, double defocusAngle, double focusDistance)
     : image_width(imageWidth),
       image_height(imageHeight),
       SPP(spp),
@@ -156,7 +156,7 @@ Camera::Camera(uint32_t imageWidth, uint32_t imageHeight, uint32_t spp, uint32_t
       camera_direction(std::move(cameraDirection)),
       defocus_angle(defocusAngle),
       focus_distance(focusDistance) {
-    image_aspect_ratio = static_cast<float>(image_width) / image_height;
+    image_aspect_ratio = static_cast<double>(image_width) / image_height;
 
 
     camera_center = camera_position;
@@ -176,8 +176,8 @@ Camera::Camera(uint32_t imageWidth, uint32_t imageHeight, uint32_t spp, uint32_t
     camera_v = camera_u.cross(camera_w).normalized();
 
 
-    vec3_direction viewport_u = static_cast<float>(viewport_width) * camera_u;
-    vec3_direction viewport_v = static_cast<float>(viewport_height) * -camera_v;
+    vec3_direction viewport_u = viewport_width * camera_u;
+    vec3_direction viewport_v = viewport_height * -camera_v;
 
     pixel_delta_u = viewport_u / static_cast<float>(image_width);
     pixel_delta_v = viewport_v / static_cast<float>(image_height);
@@ -186,7 +186,7 @@ Camera::Camera(uint32_t imageWidth, uint32_t imageHeight, uint32_t spp, uint32_t
     vec3_position viewport_upper_left =
             camera_center + focus_distance * camera_w - viewport_u / 2.0f - viewport_v / 2.0f;
 
-    float defocus_radius = focus_distance * static_cast<float>(tan(degrees_to_radians(defocus_angle / 2.0f)));
+    double defocus_radius = focus_distance * tan(degrees_to_radians(defocus_angle / 2.0f));
     defocus_disk_u = camera_u * defocus_radius;
     defocus_disk_v = camera_v * defocus_radius;
 
