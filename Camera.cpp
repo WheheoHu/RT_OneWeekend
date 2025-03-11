@@ -165,7 +165,7 @@ vec3_color Camera::ray_color(const Ray &ray, const Hittable &world, uint32_t dep
         Ray scattered;
         vec3_value attenuation;
         auto mat = record.mat_ptr;
-        record.position += record.normal * 0.001f;
+        // record.position += record.normal * 0.001f;
         // spdlog::debug("Material:{}", mat->get_name());
         if (mat->scatter(ray, record, attenuation, scattered)) {
             return attenuation.cwiseProduct(ray_color(scattered, world, depth - 1));

@@ -4,7 +4,7 @@
 
 #include "Sphere.h"
 #include "Interval.h"
-bool Sphere::hit(const Ray &r, Interval ray_t, Hit_Record &record) const {
+bool Sphere::hit(const Ray &r, Interval ray_time_interval, Hit_Record &record) const {
 
     auto current_center=get_center(r.getTime());
 
@@ -20,9 +20,9 @@ bool Sphere::hit(const Ray &r, Interval ray_t, Hit_Record &record) const {
     }
 
     auto root = (-b - sqrt(discriminant)) / (2.0 * a);
-    if (!ray_t.surrounds(root)) {
+    if (!ray_time_interval.surrounds(root)) {
         root = (-b + sqrt(discriminant)) / (2.0 * a);
-        if (!ray_t.surrounds(root)) {
+        if (!ray_time_interval.surrounds(root)) {
             return false;
         }
     }
@@ -35,6 +35,8 @@ bool Sphere::hit(const Ray &r, Interval ray_t, Hit_Record &record) const {
     outward_normal.normalize();
     record.set_face_normal(r, outward_normal);
     //record.p+=EPSILON*outward_normal.normalized();
+
+    record.position += EPSILON*record.normal;
     record.mat_ptr=mat_ptr;
     return true;
 

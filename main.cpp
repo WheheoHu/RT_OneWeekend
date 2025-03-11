@@ -58,7 +58,7 @@ int main() {
     const uint32_t MAX_DEPTH = 15;
     const uint32_t H_FOV = 45;
 
-    const vec3_position CAMERA_POSITION = vec3_position(0, 2.0, 5.0);
+    const vec3_position CAMERA_POSITION = vec3_position(0, 2.0, 3.0);
     // const vec3_direction CAMERA_DIRECTION = vec3_direction(0.f, -0.5f, -2.5f);
     const vec3_direction CAMERA_DIRECTION = (cube_center - CAMERA_POSITION).normalized();
     spdlog::debug("Camera direction: {} {} {}", CAMERA_DIRECTION.x(), CAMERA_DIRECTION.y(), CAMERA_DIRECTION.z());

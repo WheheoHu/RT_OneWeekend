@@ -16,7 +16,7 @@ public:
     //moving sphere (moving from cen_start to cen_end in 1s)
     Sphere(vec3_position cen_start,vec3_position cen_end, double r, std::shared_ptr<Material> _mat);
 
-    bool hit(const Ray &r, Interval ray_t, Hit_Record &record) const override;
+    bool hit(const Ray &r, Interval ray_time_interval, Hit_Record &record) const override;
 
     //get moving sphere center at time between 0 and 1
     vec3_position get_center( double time) const;
