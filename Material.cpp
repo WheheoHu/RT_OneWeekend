@@ -4,14 +4,14 @@
 
 #include "Material.h"
 #include "Hittable.h"
-//TODO Fix bug in diffuse_random_direction (random double generator!!)
+
 inline vec3_direction diffuse_random_direction(uint32_t seed) {
     // while (true) {
     //     // auto vec_x = random_double(0,1,seed);
     //     // auto vec_y = random_double(0,1,seed);
     //     // auto vec_z = random_double(0,1,seed);
-    //     // auto temp_vector =vec3_direction (random_double(0,1,seed), random_double(0,1,seed), random_double(0,1,seed));
-    //     auto temp_vector =vec3_direction (random_double_slow(0,1), random_double_slow(0,1), random_double_slow(0,1));
+    //     auto temp_vector =vec3_direction (random_double(0,1,seed), random_double(0,1,seed), random_double(0,1,seed));
+    //     // auto temp_vector =vec3_direction (random_double_slow(0,1), random_double_slow(0,1), random_double_slow(0,1));
     //
     //     if (temp_vector.norm() < 1) {
     //         return temp_vector.normalized();
@@ -94,7 +94,7 @@ bool Dielectric::scatter(const Ray &r_in, const Hit_Record &rec, vec3_value &att
     auto seed = static_cast<uint32_t>((abs(rec.position.x()) + abs(rec.position.y()) + abs(rec.position.z())) *
                                       1000000);
 
-    if (ref_ratio * sin_theta > 1 || reflectance(cos_theta, ref_idx) > random_rcg(seed)) {
+    if (ref_ratio * sin_theta > 1 || reflectance(cos_theta, ref_idx) > random_pcg(seed)) {
         refrection_direction = reflect(r_in_normal, rec.normal);
     } else {
         if (rec.front_face) {

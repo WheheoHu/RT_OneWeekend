@@ -23,21 +23,21 @@ inline double degrees_to_radians(double degrees) {
 }
 
 //magic rcg hash
-inline uint32_t rcg_hash(uint32_t input) {
+inline uint32_t pcg_hash(uint32_t input) {
     uint32_t state = input * 747796405u + 2891336453u;
     uint32_t word = ((state >> ((state >> 28u) + 4u)) ^ state) * 277803737u;
     return (word >> 22u) ^ word;
 }
 
 //return a random number in [0, 1) using rcg hash
-inline double random_rcg(uint32_t &seed) {
-    seed = rcg_hash(seed);
-    return static_cast<float>(seed) / static_cast<float>(std::numeric_limits<uint32_t>::max());
+inline double random_pcg(uint32_t &seed) {
+    seed = pcg_hash(seed);
+    return static_cast<double>(seed) / std::numeric_limits<uint32_t>::max();
 }
 
-//return a random number with min and max using random_rcg
+//return a random number with min and max using random_pcg
 inline double random_double(double min, double max, uint32_t& seed) {
-    return min + (max - min) * random_rcg(seed);
+    return min + (max - min) * random_pcg(seed);
 }
 
 inline int random_int(int min, int max, uint32_t &seed) {
