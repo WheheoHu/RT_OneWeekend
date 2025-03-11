@@ -219,14 +219,14 @@ Camera::Camera(uint32_t imageWidth, uint32_t imageHeight, uint32_t spp, uint32_t
 
 
     vec3_position viewport_upper_left =
-            camera_center + focus_distance * camera_w - viewport_u / 2.0f - viewport_v / 2.0f;
+            camera_center + focus_distance * camera_w - viewport_u / 2.0 - viewport_v / 2.0;
 
     double defocus_radius = focus_distance * tan(degrees_to_radians(defocus_angle / 2.0f));
     defocus_disk_u = camera_u * defocus_radius;
     defocus_disk_v = camera_v * defocus_radius;
 
     //pixel (0,0) center location
-    pixel_00_location = viewport_upper_left + pixel_delta_u / 2.0f + pixel_delta_v / 2.0f;
+    pixel_00_location = viewport_upper_left + pixel_delta_u / 2.0 + pixel_delta_v / 2.0;
 }
 
 inline vec3_position random_in_unit_disk(uint32_t &seed) {
@@ -248,7 +248,7 @@ Ray Camera::get_ray(float w, float h, uint32_t seed) {
 #endif
     vec3_direction ray_direction = pixel_center - ray_origin;
 
-    auto ray_time = random_double(0.0f, 1.0f, seed);
+    auto ray_time = random_double(0.0, 1.0, seed);
     return Ray(ray_origin, ray_direction.normalized(), ray_time);
 }
 
