@@ -42,9 +42,9 @@ int main() {
     std::make_shared<Lambertian>(vec3_color(0.7f, 0.7f, 0.7f))));
     world.add(std::make_shared<Sphere>(vec3_position(0.f, 0.f, 0.0f), 0.5f,
                                        std::make_shared<Lambertian>(vec3_color(0.5f, 0.5f, 0.5f))));
-    world.add(std::make_shared<Sphere>(vec3_position(1.5f, 0.f, -0.0f), 0.5f, std::make_shared<Dielectric>(1.5f)));
-    world.add(std::make_shared<Sphere>(vec3_position(-1.5f, 0.f, -0.0f), 0.5f,
-                                       std::make_shared<Metal>(vec3_color(1,1,1), 0.5f)));
+    // world.add(std::make_shared<Sphere>(vec3_position(1.5f, 0.f, -0.0f), 0.5f, std::make_shared<Dielectric>(1.5f)));
+    // world.add(std::make_shared<Sphere>(vec3_position(-1.5f, 0.f, -0.0f), 0.5f,
+    //                                    std::make_shared<Metal>(vec3_color(1,1,1), 0.5f)));
     // world.add(std::make_shared<Sphere>(vec3_position(1.55f, -0.1f, -1.5f), vec3_position(1.55f, 0.2f, -1.5f), 0.3f,
     //                                    std::make_shared<Metal>(vec3_color(0.8f, 0.6f, 0.2f), 0.0f)));
 
@@ -58,7 +58,7 @@ int main() {
     const uint32_t MAX_DEPTH = 15;
     const uint32_t H_FOV = 45;
 
-    const vec3_position CAMERA_POSITION = vec3_position(4.0, 2.0, 3.0);
+    const vec3_position CAMERA_POSITION = vec3_position(0, 2.0, 5.0);
     // const vec3_direction CAMERA_DIRECTION = vec3_direction(0.f, -0.5f, -2.5f);
     const vec3_direction CAMERA_DIRECTION = (cube_center - CAMERA_POSITION).normalized();
     spdlog::debug("Camera direction: {} {} {}", CAMERA_DIRECTION.x(), CAMERA_DIRECTION.y(), CAMERA_DIRECTION.z());
@@ -70,6 +70,6 @@ int main() {
                FOCUS_DISTANCE);
     {
         Timer timer;
-        cam.render(world, true);
+        cam.render(world, false);
     }
 }

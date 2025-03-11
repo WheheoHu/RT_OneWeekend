@@ -46,21 +46,40 @@ void Camera::render(const Hittable &world, const bool multithreading) {
 #else
         const uint32_t n_tread = std::thread::hardware_concurrency();
         spdlog::debug("hardware_concurrency: {}", n_tread);
-        // std::cout << "hardware_concurrency: " << n_tread << std::endl;
+
+        // Divide image into chunks for better cache locality
         std::vector<std::thread> thread_vector;
         thread_vector.reserve(n_tread);
+
+        // Calculate chunk height for better load balancing
+        uint32_t chunk_height = (image_height + n_tread - 1) / n_tread;
+
         for (uint32_t i = 0; i < n_tread; ++i) {
             thread_vector.emplace_back(
                 [&, i]() {
-                    for (uint32_t h = i; h < image_height; h += n_tread) {
-                        for (int w = 0; w < image_width; ++w) {
-                            uint32_t seed = h * image_width + w ;
+                    // Calculate start and end rows for this thread
+                    uint32_t start_h = i * chunk_height;
+                    uint32_t end_h = std::min(start_h + chunk_height, image_height);
+
+                    // Generate a unique seed for this thread
+                    uint32_t thread_seed = i + 42;
+
+                    // Process chunk row by row for better cache locality
+                    for (uint32_t h = start_h; h < end_h; ++h) {
+                        for (uint32_t w = 0; w < image_width; ++w) {
+                            // Use a hash function to create different seeds for each pixel
+                            uint32_t pixel_seed = (h * 1973 + w * 9277 + thread_seed) ^ 0xA5A5A5A5;
+
                             vec3_color pixel_color(0.f, 0.f, 0.f);
                             for (int sample_index = 0; sample_index < SPP; ++sample_index) {
-                                auto u = (w + random_double(-0.5f, 0.5f, seed));
-                                auto v = (h + random_double(-0.5f, 0.5f, seed));
+                                // Use different seed for each sample to avoid RNG correlation
+                                uint32_t sample_seed = pixel_seed + sample_index * 16807;
+
+                                auto u = (w + random_double(-0.5f, 0.5f, sample_seed));
+                                auto v = (h + random_double(-0.5f, 0.5f, sample_seed));
                                 pixel_color +=
-                                        ray_color(get_ray(u, v, seed), world, max_depth) / static_cast<float>(SPP);
+                                        ray_color(get_ray(u, v, sample_seed), world, max_depth) / static_cast<float>(
+                                            SPP);
                             }
                             pixel_color = linear2gamma(pixel_color, 2.2f);
                             //convert color value from 0~1 to 0~255
@@ -71,11 +90,27 @@ void Camera::render(const Hittable &world, const bool multithreading) {
                 }
             );
         }
+
+        // Display progress indicator
+        uint32_t completed_threads = 0;
+        auto start_time = std::chrono::high_resolution_clock::now();
+
         for (auto &&thread: thread_vector) {
             thread.join();
+            completed_threads++;
+
+            auto current_time = std::chrono::high_resolution_clock::now();
+            auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(current_time - start_time).count();
+
+            if (duration > 0) {
+                std::cerr << "\rOutput: " << static_cast<int>(100.0f * completed_threads / n_tread) << "% ("
+                        << completed_threads << "/" << n_tread << " threads)" << std::flush;
+            }
         }
+        std::cerr << "\rOutput: 100%" << std::endl;
 #endif
     } else {
+//Single thread rendering
         for (int h = 0; h <= image_height - 1; ++h) {
             std::cerr << "\rOutput: " << static_cast<uint32_t>(100.0 * static_cast<float>(h) / image_height) << '%' <<
                     std::flush;
@@ -164,7 +199,7 @@ Camera::Camera(uint32_t imageWidth, uint32_t imageHeight, uint32_t spp, uint32_t
 
     //setting up viewport
     camera_direction.normalize();
-    vector_up=vec3_direction (0.0f,1.0f,0.0f);
+    vector_up = vec3_direction(0.0f, 1.0f, 0.0f);
     vector_up.normalize();
 
     auto viewport_width = 2 * focus_distance * tan(fov_radians / 2.0f);
