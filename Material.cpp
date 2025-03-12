@@ -6,19 +6,9 @@
 #include "Hittable.h"
 
 inline vec3_direction diffuse_random_direction(uint32_t seed) {
-    // while (true) {
-    //     // auto vec_x = random_double(0,1,seed);
-    //     // auto vec_y = random_double(0,1,seed);
-    //     // auto vec_z = random_double(0,1,seed);
-    //     auto temp_vector =vec3_direction (random_double(0,1,seed), random_double(0,1,seed), random_double(0,1,seed));
-    //     // auto temp_vector =vec3_direction (random_double_slow(0,1), random_double_slow(0,1), random_double_slow(0,1));
-    //
-    //     if (temp_vector.norm() < 1) {
-    //         return temp_vector.normalized();
-    //     }
-    // }
+
     seed = seed * 747796405u + 2891336453u;
-    double z = 2.0 * random_double(0, 1, seed) - 1.0;
+    double z = random_double(-1, 1, seed) ;
 
     seed = seed * 747796405u + 2891336453u;
     double phi = 2.0 * M_PI * random_double(0, 1, seed);
@@ -48,8 +38,7 @@ std::string Lambertian::get_name() const {
 }
 
 bool Lambertian::scatter(const Ray &r_in, const Hit_Record &rec, vec3_value &attenuation, Ray &scattered) const {
-    auto seed = static_cast<uint32_t>((abs(rec.position.x()) + abs(rec.position.y()) + abs(rec.position.z())) *
-                                      1000000);
+    auto seed = static_cast<uint32_t>(rec.position.norm() * rec.time *1000000);
     auto diffuse_direction = diffuse_random_direction(seed);
     if (diffuse_direction.dot(rec.normal) <= 0) {
         diffuse_direction = -diffuse_direction;
@@ -71,8 +60,7 @@ std::string Metal::get_name() const {
 }
 
 bool Metal::scatter(const Ray &r_in, const Hit_Record &rec, vec3_value &attenuation, Ray &scattered) const {
-    auto seed = static_cast<uint32_t>((abs(rec.position.x()) + abs(rec.position.y()) + abs(rec.position.z())) *
-                                      1000000);
+    auto seed = static_cast<uint32_t>(rec.position.norm() * rec.time *1000000);
     auto reflect_direction = reflect(r_in.getDir().normalized(), rec.normal);
     auto reflect_fuzzed = reflect_direction + fuzz * diffuse_random_direction(seed);
     scattered = Ray(rec.position, reflect_fuzzed.normalized(), r_in.getTime());
@@ -91,8 +79,8 @@ bool Dielectric::scatter(const Ray &r_in, const Hit_Record &rec, vec3_value &att
     auto sin_theta = sqrt(1.0 - pow(cos_theta, 2));
     vec3_direction refrection_direction;
     auto ref_ratio = rec.front_face ? (1.0 / ref_idx) : ref_idx;
-    auto seed = static_cast<uint32_t>((abs(rec.position.x()) + abs(rec.position.y()) + abs(rec.position.z())) *
-                                      1000000);
+
+    auto seed = static_cast<uint32_t>(rec.position.norm() * rec.time *1000000);
 
     if (ref_ratio * sin_theta > 1 || reflectance(cos_theta, ref_idx) > random_pcg(seed)) {
         refrection_direction = reflect(r_in_normal, rec.normal);

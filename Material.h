@@ -32,7 +32,7 @@ private:
 
 class Metal : public Material {
 public:
-    Metal(const vec3_value &albedo, double fuzz) : albedo(albedo), fuzz(fuzz < 1 ? fuzz : 1) {}
+    Metal(const vec3_value &albedo, double fuzz=0.0) : albedo(albedo), fuzz(fuzz < 1 ? fuzz : 1) {}
 
     std::string get_name() const override;
 
