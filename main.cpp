@@ -7,6 +7,7 @@
 #include "Camera.h"
 #include "Material.h"
 #include "Timer.h"
+#include "BVH.h"
 
 int main() {
 //TODO Fix rendering issues when camera pull far from origin
@@ -77,6 +78,9 @@ int main() {
     //                                    std::make_shared<Metal>(vec3_color(1,1,1), 0.0)));
     // world.add(std::make_shared<Sphere>(vec3_position(1.55f, -0.1f, -1.5f), vec3_position(1.55f, 0.2f, -1.5f), 0.3f,
     //                                    std::make_shared<Metal>(vec3_color(0.8f, 0.6f, 0.2f), 0.0f)));
+
+    //Build BVH for world
+    world=Hittable_List(std::make_shared<BVH_Node>(world));
 
     // Image Settings
     const uint32_t IMAGE_WIDTH = 1280;

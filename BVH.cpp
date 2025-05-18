@@ -4,55 +4,62 @@
 
 #include "BVH.h"
 
-AABB::AABB(const Interval &x, const Interval &y, const Interval &z):
-    x(x), y(y), z(z) {
+
+BVH_Node::BVH_Node(Hittable_List hittable_list): BVH_Node(hittable_list.get_objects(), 0,
+                                                          hittable_list.get_objects().size()) {
 }
 
-AABB::AABB(const vec3_position &a, const vec3_position &b) {
-    x = (a.x() < b.x()) ? Interval(a.x(), b.x()) : Interval(b.x(), a.x());
-    y = (a.y() < b.y()) ? Interval(a.y(), b.y()) : Interval(b.y(), a.y());
-    z = (a.z() < b.z()) ? Interval(a.z(), b.z()) : Interval(b.z(), a.z());
-}
-
-AABB::AABB(const AABB &a, const AABB &b) {
-    x=Interval(a.x, b.x);
-    y=Interval(a.y, b.y);
-    z=Interval(a.z, b.z);
-}
-
-
-bool AABB::hit(const Ray &r) const {
-    auto raytime_interval = universe;
-    const auto& ray_orig = r.getOrig();
-    const auto& ray_dir = r.getDir();
-    for (int axis = 0; axis < 3; ++axis) {
-        const auto axis_interval = get_axis_interval_by_index(axis);
-        auto t0= (axis_interval.min - ray_orig[axis]) / ray_dir[axis];
-        auto t1= (axis_interval.max - ray_orig[axis]) / ray_dir[axis];
-        if (t0 < t1) {
-            raytime_interval.min = std::max(raytime_interval.min, t0);
-            raytime_interval.max = std::min(raytime_interval.max, t1);
-        } else {
-            raytime_interval.min = std::max(raytime_interval.min, t1);
-            raytime_interval.max = std::min(raytime_interval.max, t0);
-        }
-
-        if (raytime_interval.min > raytime_interval.max) {
-            return false;
-        }
+BVH_Node::BVH_Node(std::vector<std::shared_ptr<Hittable> > &objects, uint32_t start, uint32_t end) {
+    //get current time as seed
+    uint32_t seed = static_cast<uint32_t>(std::chrono::system_clock::now().time_since_epoch().count());
+    int axis = random_int(0, 2, seed);
+    auto comparator= (axis == 0) ? box_x_compare : ((axis == 1) ? box_y_compare : box_z_compare);
+    uint32_t object_span=end-start;
+    if (object_span==1) {
+        left=right=objects[start];
+    }else if (object_span==2) {
+        left=objects[start];
+        right=objects[start+1];
     }
-    return  true;
+    else  {
+        std::sort(std::begin(objects)+start, std::begin(objects)+end, comparator);
+        auto mid= start+object_span/2;
+        left= std::make_shared<BVH_Node>(objects, start, mid);
+        right= std::make_shared<BVH_Node>(objects, mid, end);
+    }
+    bounding_box= AABB(left->get_bounding_box(), right->get_bounding_box());
+
 }
 
-const Interval &AABB::get_axis_interval_by_index(int axis_index) const {
-    switch (axis_index) {
-        case 0:
-            return x;
-        case 1:
-            return y;
-        case 2:
-            return z;
-        default:
-            return empty;
+bool BVH_Node::hit(const Ray &ray, Interval raytime_interval, Hit_Record &record) const {
+    if (!bounding_box.hit(ray, raytime_interval)) {
+        return false;
     }
+    auto hit_left = left->hit(ray, raytime_interval, record);
+    auto hit_right = right->hit(ray, Interval(raytime_interval.min, hit_left ? record.time : raytime_interval.max),
+                                record);
+
+    return hit_left || hit_right;
+}
+
+AABB BVH_Node::get_bounding_box() const {
+    return bounding_box;
+}
+
+bool BVH_Node::box_compare(const std::shared_ptr<Hittable> a, const std::shared_ptr<Hittable> b, int axis) {
+    auto a_axis_interval = a->get_bounding_box().get_axis_interval_by_index(axis);
+    auto b_axis_interval = b->get_bounding_box().get_axis_interval_by_index(axis);
+    return a_axis_interval.min < b_axis_interval.min;
+}
+
+bool BVH_Node::box_x_compare(const std::shared_ptr<Hittable> a, const std::shared_ptr<Hittable> b) {
+    return box_compare(a, b, 0);
+}
+
+bool BVH_Node::box_y_compare(const std::shared_ptr<Hittable> a, const std::shared_ptr<Hittable> b) {
+    return box_compare(a, b, 1);
+}
+
+bool BVH_Node::box_z_compare(const std::shared_ptr<Hittable> a, const std::shared_ptr<Hittable> b) {
+    return box_compare(a, b, 2);
 }

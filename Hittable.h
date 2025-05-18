@@ -6,10 +6,12 @@
 #define RT_ONEWEEKEND_HITTABLE_H
 #include <memory>
 
-#include "BVH.h"
+
 #include "Ray.h"
 #include "Interval.h"
 #include "Material.h"
+#include "AABB.h"
+
 
 class Hit_Record {
 public:

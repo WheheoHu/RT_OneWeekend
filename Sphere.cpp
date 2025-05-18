@@ -4,9 +4,9 @@
 
 #include "Sphere.h"
 #include "Interval.h"
-bool Sphere::hit(const Ray &r, Interval ray_time_interval, Hit_Record &record) const {
 
-    auto current_center=get_center(r.getTime());
+bool Sphere::hit(const Ray &r, Interval ray_time_interval, Hit_Record &record) const {
+    auto current_center = get_center(r.getTime());
 
     auto oc = r.getOrig() - current_center;
     auto a = r.getDir().dot(r.getDir());
@@ -36,32 +36,35 @@ bool Sphere::hit(const Ray &r, Interval ray_time_interval, Hit_Record &record) c
     record.set_face_normal(r, outward_normal);
     //record.p+=EPSILON*outward_normal.normalized();
 
-    record.position += EPSILON*record.normal;
-    record.mat_ptr=mat_ptr;
+    record.position += EPSILON * record.normal;
+    record.mat_ptr = mat_ptr;
     return true;
-
-
 }
 
-Sphere::Sphere(vec3_position cen_start, vec3_position cen_end, double r, std::shared_ptr<Material> _mat) : center(std::move(cen_start)), center_end(std::move(cen_end)),radius(r), mat_ptr(std::move(_mat)),is_moving(true) {
+Sphere::Sphere(vec3_position center_start, vec3_position center_end, double r,
+               std::shared_ptr<Material> _mat) : center(std::move(center_start)), center_end(std::move(center_end)),
+                                                 radius(r), mat_ptr(std::move(_mat)), is_moving(true) {
     move_direction = center_end - center;
-
+    const auto temp_radius_vector = vec3_direction(r, r, r);
+    const auto start_bbox = AABB(center_start - temp_radius_vector, center_start + temp_radius_vector);
+    const auto end_bbox = AABB(center_end - temp_radius_vector, center_end + temp_radius_vector);
+    sphere_bbox = AABB(start_bbox, end_bbox);
 }
 
-Sphere::Sphere(vec3_position sphere_center, double r, std::shared_ptr<Material> _mat) : center(std::move(sphere_center)), radius(r), mat_ptr(std::move(_mat)),is_moving(false) {
-    auto temp_radius_vector = vec3_direction(r,r,r);
+Sphere::Sphere(vec3_position sphere_center, double r,
+               std::shared_ptr<Material> _mat) : center(std::move(sphere_center)), radius(r), mat_ptr(std::move(_mat)),
+                                                 is_moving(false) {
+    auto temp_radius_vector = vec3_direction(r, r, r);
     sphere_bbox = AABB(center - temp_radius_vector, center + temp_radius_vector);
 }
 
 vec3_position Sphere::get_center(double time) const {
-    if (!is_moving){
+    if (!is_moving) {
         return center;
     }
     return center + move_direction * time;
 }
 
 AABB Sphere::get_bounding_box() const {
-    return  sphere_bbox;
+    return sphere_bbox;
 }
-
-

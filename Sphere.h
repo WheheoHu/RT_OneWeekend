@@ -13,8 +13,8 @@ public:
     //static sphere
     Sphere(vec3_position sphere_center, double r, std::shared_ptr<Material> _mat);;
 
-    //moving sphere (moving from cen_start to cen_end in 1s)
-    Sphere(vec3_position cen_start,vec3_position cen_end, double r, std::shared_ptr<Material> _mat);
+    //moving sphere (moving from center_start to center_end in 1s)
+    Sphere(vec3_position center_start,vec3_position center_end, double r, std::shared_ptr<Material> _mat);
 
     bool hit(const Ray &r, Interval ray_time_interval, Hit_Record &record) const override;
 

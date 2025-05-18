@@ -41,7 +41,7 @@ inline double random_double(double min, double max, uint32_t& seed) {
 }
 
 inline int random_int(int min, int max, uint32_t &seed) {
-    return static_cast<int>(random_double(min, max, seed));
+    return static_cast<int>(random_double(min, max+1, seed));
 }
 
 //return a random number in [0, 1) using c++ std random (SLOWWWWW)

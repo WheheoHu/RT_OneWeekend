@@ -17,6 +17,11 @@ public:
 
     AABB get_bounding_box() const override;
 
+
+    std::vector<std::shared_ptr<Hittable>> &get_objects() {
+        return objects;
+    }
+
 private:
     std::vector<std::shared_ptr<Hittable>> objects;
     AABB hitable_list_bbox;

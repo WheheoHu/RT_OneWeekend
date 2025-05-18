@@ -22,8 +22,8 @@ public:
 
     static const Interval empty,universe;
 };
-static const Interval empty(infinity, -infinity);
-static const Interval universe(-infinity, infinity);
+static const Interval empty_interval(infinity, -infinity);
+static const Interval universe_interval(-infinity, infinity);
 
 
 #endif //RT_ONEWEEKEND_INTERVAL_H

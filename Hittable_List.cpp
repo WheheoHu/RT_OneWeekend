@@ -36,7 +36,7 @@ void Hittable_List::clear() {
 
 void Hittable_List::add(const std::shared_ptr<Hittable>& object) {
     objects.push_back(object);
-    // hitable_list_bbox=AABB(hitable_list_bbox,object->get_bounding_box());
+    hitable_list_bbox=AABB(hitable_list_bbox,object->get_bounding_box());
 
 }
 
