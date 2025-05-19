@@ -27,3 +27,10 @@ Interval Interval::expand(const double delta) const {
     const auto pandding = delta / 2;
     return {min - pandding, max + pandding};
 }
+
+double Interval::size() const {
+    return abs(max-min);
+}
+
+const Interval Interval::empty_interval(infinity, -infinity);
+const Interval Interval::universe_interval(-infinity, infinity);

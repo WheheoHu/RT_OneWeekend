@@ -10,7 +10,7 @@
 #include "BVH.h"
 
 int main() {
-//TODO Fix rendering issues when camera pull far from origin
+    //TODO Fix rendering issues when camera pull far from origin
     spdlog::set_level(spdlog::level::debug);
 
     //World object
@@ -69,7 +69,7 @@ int main() {
     // }
     //Ground Sphere
     world.add(std::make_shared<Sphere>(vec3_position(0.f, -100.5f, 0.f), 100.f,
-    std::make_shared<Lambertian>(vec3_color(0.7f, 0.7f, 0.7f))));
+                                       std::make_shared<Lambertian>(vec3_color(0.7f, 0.7f, 0.7f))));
 
     // world.add(std::make_shared<Sphere>(vec3_position(0., 0, 0), 0.5,
     //                                    std::make_shared<Lambertian>(vec3_color(0.5, 0.5, 0.5))));
@@ -79,9 +79,12 @@ int main() {
     // world.add(std::make_shared<Sphere>(vec3_position(1.55f, -0.1f, -1.5f), vec3_position(1.55f, 0.2f, -1.5f), 0.3f,
     //                                    std::make_shared<Metal>(vec3_color(0.8f, 0.6f, 0.2f), 0.0f)));
 
-    //Build BVH for world
-    world=Hittable_List(std::make_shared<BVH_Node>(world));
-
+    {
+        Timer timer;
+        //Build BVH for world
+        world = Hittable_List(std::make_shared<BVH_Node>(world));
+    }
+    spdlog::debug("BVH building finished");
     // Image Settings
     const uint32_t IMAGE_WIDTH = 1280;
     const uint32_t IMAGE_HEIGHT = 720;
@@ -91,7 +94,7 @@ int main() {
     const uint32_t SPP = 30;
     const uint32_t MAX_DEPTH = 15;
     const uint32_t H_FOV = 55;
-    vec3_position camera_focus=cube_center;
+    vec3_position camera_focus = cube_center;
     const vec3_position CAMERA_POSITION = vec3_position(0, 5, 6);
     // const vec3_direction CAMERA_DIRECTION = vec3_direction(0.f, -0.5f, -2.5f);
     const vec3_direction CAMERA_DIRECTION = (camera_focus - CAMERA_POSITION).normalized();
@@ -101,8 +104,7 @@ int main() {
 
 
     Camera cam(IMAGE_WIDTH, IMAGE_HEIGHT, SPP, MAX_DEPTH, H_FOV, CAMERA_POSITION, CAMERA_DIRECTION, DEFOCUS_ANGLE,
-               FOCUS_DISTANCE);
-    {
+               FOCUS_DISTANCE); {
         Timer timer;
         cam.render(world, false);
     }

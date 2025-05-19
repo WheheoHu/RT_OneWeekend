@@ -18,13 +18,18 @@ public:
 
     AABB(const AABB &a, const AABB &b);
 
-    bool hit(const Ray &r,const Interval &ray_interval) const;
+    bool hit(const Ray &r, const Interval &ray_interval) const;
 
     const Interval &get_axis_interval_by_index(int axis_index) const;
+
+    uint32_t get_longest_axis_index() const;
+
+    static const AABB empty_aabb, universe_aabb;
+
 private:
     Interval x, y, z;
-
 };
+
 
 
 #endif //AABB_H

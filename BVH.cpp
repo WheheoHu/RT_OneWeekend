@@ -10,9 +10,11 @@ BVH_Node::BVH_Node(Hittable_List hittable_list): BVH_Node(hittable_list.get_obje
 }
 
 BVH_Node::BVH_Node(std::vector<std::shared_ptr<Hittable> > &objects, uint32_t start, uint32_t end) {
-    //get current time as seed
-    uint32_t seed = static_cast<uint32_t>(std::chrono::system_clock::now().time_since_epoch().count());
-    int axis = random_int(0, 2, seed);
+    bounding_box = AABB::empty_aabb;
+    for  (uint32_t i = start; i < end; i++) {
+        bounding_box = AABB(bounding_box,  objects[i]->get_bounding_box());
+    }
+    int axis = bounding_box.get_longest_axis_index();
     auto comparator= (axis == 0) ? box_x_compare : ((axis == 1) ? box_y_compare : box_z_compare);
     uint32_t object_span=end-start;
     if (object_span==1) {

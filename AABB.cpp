@@ -3,6 +3,7 @@
 //
 
 #include "AABB.h"
+#include "Interval.h"
 
 AABB::AABB(const Interval &x, const Interval &y, const Interval &z): x(x), y(y), z(z) {
 }
@@ -20,7 +21,7 @@ AABB::AABB(const AABB &a, const AABB &b) {
 }
 
 
-bool AABB::hit(const Ray &r,const Interval &ray_interval) const {
+bool AABB::hit(const Ray &r, const Interval &ray_interval) const {
     auto raytime_interval = ray_interval;
     const auto &ray_orig = r.getOrig();
     const auto &ray_dir = r.getDir();
@@ -52,6 +53,18 @@ const Interval &AABB::get_axis_interval_by_index(int axis_index) const {
         case 2:
             return z;
         default:
-            return empty_interval;
+            return Interval::empty_interval;
     }
 }
+
+uint32_t AABB::get_longest_axis_index() const {
+    if (x.size() > y.size()) {
+        return x.size() > z.size() ? 0 : 2;
+    } else {
+        return y.size() > z.size() ? 1 : 2;
+    }
+}
+
+const AABB AABB::empty_aabb = AABB(Interval::empty_interval, Interval::empty_interval, Interval::empty_interval);
+const AABB AABB::universe_aabb = AABB(Interval::universe_interval, Interval::universe_interval,
+                                      Interval::universe_interval);
