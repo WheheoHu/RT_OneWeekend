@@ -53,7 +53,7 @@ const Interval &AABB::get_axis_interval_by_index(int axis_index) const {
         case 2:
             return z;
         default:
-            return Interval::empty_interval;
+            return empty_interval;
     }
 }
 
@@ -65,6 +65,4 @@ uint32_t AABB::get_longest_axis_index() const {
     }
 }
 
-const AABB AABB::empty_aabb = AABB(Interval::empty_interval, Interval::empty_interval, Interval::empty_interval);
-const AABB AABB::universe_aabb = AABB(Interval::universe_interval, Interval::universe_interval,
-                                      Interval::universe_interval);
+

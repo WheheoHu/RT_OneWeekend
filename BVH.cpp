@@ -10,7 +10,7 @@ BVH_Node::BVH_Node(Hittable_List hittable_list): BVH_Node(hittable_list.get_obje
 }
 
 BVH_Node::BVH_Node(std::vector<std::shared_ptr<Hittable> > &objects, uint32_t start, uint32_t end) {
-    bounding_box = AABB::empty_aabb;
+    bounding_box = empty_aabb;
     for  (uint32_t i = start; i < end; i++) {
         bounding_box = AABB(bounding_box,  objects[i]->get_bounding_box());
     }

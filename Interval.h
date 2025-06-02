@@ -27,9 +27,10 @@ public:
 
     double size() const;
 
-    static const Interval empty_interval, universe_interval;
 };
 
+const Interval empty_interval=Interval(infinity, -infinity);
+const Interval universe_interval=Interval(-infinity, infinity);
 
 
 #endif //RT_ONEWEEKEND_INTERVAL_H

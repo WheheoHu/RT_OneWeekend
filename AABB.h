@@ -24,12 +24,13 @@ public:
 
     uint32_t get_longest_axis_index() const;
 
-    static const AABB empty_aabb, universe_aabb;
 
 private:
     Interval x, y, z;
 };
 
-
+const AABB empty_aabb = AABB(empty_interval, empty_interval, empty_interval);
+const AABB universe_aabb = AABB(universe_interval, universe_interval,
+                                      universe_interval);
 
 #endif //AABB_H

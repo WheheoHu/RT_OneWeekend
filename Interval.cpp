@@ -32,5 +32,4 @@ double Interval::size() const {
     return abs(max-min);
 }
 
-const Interval Interval::empty_interval(infinity, -infinity);
-const Interval Interval::universe_interval(-infinity, infinity);
+
