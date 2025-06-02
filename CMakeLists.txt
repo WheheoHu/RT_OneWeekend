@@ -30,6 +30,8 @@ add_executable(RT_OneWeekend main.cpp Ray.cpp Ray.h Hittable.h Sphere.cpp Sphere
         BVH.h
         AABB.cpp
         AABB.h
+        Texture.cpp
+        Texture.h
 )
 
 target_link_libraries(RT_OneWeekend Eigen3::Eigen spdlog::spdlog)

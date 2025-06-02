@@ -18,7 +18,9 @@ public:
     vec3_position position;
     vec3_direction normal;
     double time;
+    double u,v;
     bool front_face;
+
     std::shared_ptr<Material> mat_ptr;
     inline void set_face_normal(const Ray &ray, const vec3_direction &outward_normal) {
         front_face = ray.getDir().dot(outward_normal) < 0;
