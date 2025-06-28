@@ -5,6 +5,7 @@
 #ifndef RT_ONEWEEKEND_MATERIAL_H
 #define RT_ONEWEEKEND_MATERIAL_H
 
+#include "Texture.h"
 #include "Utility.h"
 
 
@@ -20,14 +21,14 @@ public:
 
 class Lambertian : public Material {
 public:
-    explicit Lambertian(const vec3_color &albedo) : albedo(albedo) {}
-
-    std::string get_name() const override;
+    explicit Lambertian(const vec3_color &albedo) : texture(std::make_shared<Solid_Color>(albedo)) {}
+    explicit Lambertian(const std::shared_ptr<Texture> texture):texture(texture){}
+    [[nodiscard]] std::string get_name() const override;
 
     bool scatter(const Ray &r_in, const Hit_Record &rec, vec3_value &attenuation, Ray &scattered) const override;
 
 private:
-    vec3_value albedo;
+    std::shared_ptr<Texture> texture;
 };
 
 class Metal : public Material {

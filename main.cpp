@@ -68,8 +68,9 @@ int main() {
     //                                        std::make_shared<Lambertian>(vec3_color(0.5f, 0.5f, 0.5f))));
     // }
     //Ground Sphere
+    auto checker_texture=std::make_shared<Checker_Texture>(0.5,vec3_color(1.0,1.0,1.0),vec3_color(0.0,0.0,1.0));
     world.add(std::make_shared<Sphere>(vec3_position(0.f, -100.5f, 0.f), 100.f,
-                                       std::make_shared<Lambertian>(vec3_color(0.7f, 0.7f, 0.7f))));
+                                       std::make_shared<Lambertian>(checker_texture)));
 
     // world.add(std::make_shared<Sphere>(vec3_position(0., 0, 0), 0.5,
     //                                    std::make_shared<Lambertian>(vec3_color(0.5, 0.5, 0.5))));

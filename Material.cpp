@@ -49,7 +49,7 @@ bool Lambertian::scatter(const Ray &r_in, const Hit_Record &rec, vec3_value &att
         scatter_direction = rec.normal;
     }
     scatter_direction.normalize();
-    attenuation = albedo;
+    attenuation = texture->get_value(rec.u,rec.v,rec.position);
     scattered = Ray(rec.position, scatter_direction, r_in.getTime());
 
     return true;
